@@ -28,7 +28,9 @@ A：上网查到有两种算法，一种是使用自增id来达到永不重复�
 
 # 二、原型设计
 
-参考
+参考百度短链接服务界面 [https://dwz.cn/](https://dwz.cn/)
+
+![](https://upload-images.jianshu.io/upload_images/7896890-a5e43593a66e8958.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 # 三、数据库设计
 根据项目需求，表可以简单的设计成：
@@ -49,4 +51,77 @@ CREATE TABLE `tbl_link` (
 根据以往的经验，使用MyBatis的话，可以把`create_time`的默认值设置为`CURRENT_TIMESTAMP`，把`update_time`的默认值设置为`CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`，这样就可以直接使用MyBatis逆向生成之后的带Selective的方法自动维护这两个字段的值
 
 # 四、后台搭建
+## 1）首先统一返回给前台的数据
+新增Vo包，然后在下面创建两个基础Vo类：
 
+```java
+public class ResponseVo<T> {
+    private Integer status;
+    private String msg;
+    private T data;
+
+    /** getter and setter */
+}
+```
+
+```java
+public class PageResultVo {
+    private List rows;
+    private Long total;
+
+    /** getter and setter */
+}
+```
+
+以及创建一个返回工具类：
+
+```java
+public class ResultUtil {
+    public static ResponseVo success() {
+        return vo(ConstCode.SUCCESS_CODE, null, null);
+    }
+
+    public static ResponseVo success(String msg) {
+        return vo(ConstCode.SUCCESS_CODE, msg, null);
+    }
+
+    public static ResponseVo success(String msg, Object data) {
+        return vo(ConstCode.SUCCESS_CODE, msg, data);
+    }
+
+    public static ResponseVo error() {
+        return vo(ConstCode.FAIL_CODE, null, null);
+    }
+
+    public static ResponseVo error(String msg) {
+        return vo(ConstCode.FAIL_CODE, msg, null);
+    }
+
+    public static ResponseVo error(String msg, Object data) {
+        return vo(ConstCode.FAIL_CODE, msg, data);
+    }
+
+    public static PageResultVo table(List<?> list, Long total) {
+        return new PageResultVo(list, total);
+    }
+
+    public static ResponseVo vo(Integer status, String message, Object data) {
+        return new ResponseVo<>(status, message, data);
+    }
+}
+```
+
+## 2）使用Swagger来搭建RESTful APIs
+引入Swagger工具来管理相关的RESTful API
+
+## 3）使用MyBatis逆向生成
+## 4）使用Redis来简单缓存
+参考文章：https://blog.csdn.net/fanpeizhong/article/details/79998164
+## 5）缩短算法
+参考文章：https://blog.csdn.net/u013782879/article/details/80851784
+
+# 五、前台页面编写
+前台使用Vue + Element来进行快速搭建
+
+# 六、测试
+在后台编写好后使用PostMan进行接口测试
