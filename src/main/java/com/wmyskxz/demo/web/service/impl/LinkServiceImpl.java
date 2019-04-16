@@ -7,6 +7,7 @@ import com.wmyskxz.demo.module.entity.TblLinkExample;
 import com.wmyskxz.demo.util.ConstCode;
 import com.wmyskxz.demo.util.ShortUrlGenerator;
 import com.wmyskxz.demo.web.service.LinkService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,6 +61,7 @@ public class LinkServiceImpl implements LinkService {
 
     @Override
     @Transactional// 开启事务
+    @Cacheable(value = "link", key = "'long_'+#shortCode")
     public String get(String shortCode) {
         TblLinkExample linkExample = new TblLinkExample();
         linkExample.or().andShortUrlEqualTo(UrlConfig.BASE_SHORT_URL + shortCode);
@@ -73,6 +75,7 @@ public class LinkServiceImpl implements LinkService {
 
     @Override
     @Transactional// 开启事务
+    @Cacheable(value = "link", key = "'link_'+#longUrl")
     public TblLink findByLongUrl(String longUrl) {
         TblLinkExample linkExample = new TblLinkExample();
         linkExample.or().andLongUrlEqualTo(longUrl);

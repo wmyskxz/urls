@@ -1,8 +1,12 @@
 package com.wmyskxz.demo.module.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class TblLink {
+public class TblLink implements Serializable {
+
+    private static final long serialVersionUID = -1L;
+
     private Long id;
 
     private String longUrl;
@@ -17,7 +21,8 @@ public class TblLink {
 
     private Integer visitSize;
 
-    public TblLink(Long id, String longUrl, String shortUrl, Date createTime, Date updateTime, String type, Integer visitSize) {
+    public TblLink(Long id, String longUrl, String shortUrl, Date createTime, Date updateTime, String type,
+                   Integer visitSize) {
         this.id = id;
         this.longUrl = longUrl;
         this.shortUrl = shortUrl;
