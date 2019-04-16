@@ -1,6 +1,10 @@
 package com.wmyskxz.demo.web.service;
 
+import com.github.pagehelper.Page;
 import com.wmyskxz.demo.module.entity.TblLink;
+import com.wmyskxz.demo.module.vo.LinkVo;
+
+import java.util.List;
 
 /**
  * 链接url相关service
@@ -57,4 +61,21 @@ public interface LinkService {
      * @param shortUrl
      */
     void addVisitByShortUrl(String shortUrl);
+
+
+    /**
+     * 返回数据库中的Link列表
+     *
+     * @param page
+     * @return
+     */
+    List<LinkVo> list(Page page);
+
+    /**
+     * 统计总数
+     *
+     * @return
+     */
+    Long count();
+
 }

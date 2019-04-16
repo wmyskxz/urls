@@ -1,17 +1,23 @@
 package com.wmyskxz.demo.web.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.wmyskxz.demo.config.UrlConfig;
 import com.wmyskxz.demo.module.dao.TblLinkMapper;
 import com.wmyskxz.demo.module.entity.TblLink;
 import com.wmyskxz.demo.module.entity.TblLinkExample;
+import com.wmyskxz.demo.module.vo.LinkVo;
 import com.wmyskxz.demo.util.ConstCode;
 import com.wmyskxz.demo.util.ShortUrlGenerator;
 import com.wmyskxz.demo.web.service.LinkService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -27,6 +33,7 @@ public class LinkServiceImpl implements LinkService {
 
     @Override
     @Transactional// 开启事务
+    @CachePut(value = "link", key = "'count'")
     public String save(String longUrl) {
         TblLink link = findByLongUrl(longUrl);
         if (link != null) {
@@ -44,6 +51,7 @@ public class LinkServiceImpl implements LinkService {
 
     @Override
     @Transactional// 开启事务
+    @CachePut(value = "link", key = "'count'")
     public String save(String longUrl, String shortCode) {
 
         if (!isValid(UrlConfig.BASE_SHORT_URL + shortCode)) {
@@ -103,5 +111,35 @@ public class LinkServiceImpl implements LinkService {
         TblLink link = linkMapper.selectByExample(linkExample).get(0);
         link.setVisitSize(link.getVisitSize() + 1);
         linkMapper.updateByPrimaryKeySelective(link);// 其他字段跟随数据库自动更新
+    }
+
+    @Override
+    @Transactional// 开启事务
+    public List<LinkVo> list(Page page) {
+        List<LinkVo> resultList = new LinkedList<>();
+
+        TblLinkExample linkExample = new TblLinkExample();
+        linkExample.or();// 无条件查询即查询所有
+        PageHelper.startPage(page);// 只对下一行查询有效
+        List<TblLink> linkList = linkMapper.selectByExample(linkExample);
+
+        // 拼接数据
+        LinkVo linkVo;
+        for (TblLink link : linkList) {
+            linkVo = new LinkVo();
+            BeanUtils.copyProperties(link, linkVo);
+            resultList.add(linkVo);
+        }   // end for
+
+        return resultList;
+    }
+
+    @Override
+    @Transactional// 开启事务
+    @Cacheable(value = "link", key = "'count'")
+    public Long count() {
+        TblLinkExample linkExample = new TblLinkExample();
+        linkExample.or();// 无条件查询即查询所有
+        return linkMapper.countByExample(linkExample);
     }
 }

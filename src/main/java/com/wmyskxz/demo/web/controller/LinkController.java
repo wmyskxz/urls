@@ -1,6 +1,9 @@
 package com.wmyskxz.demo.web.controller;
 
+import com.github.pagehelper.Page;
+import com.wmyskxz.demo.config.PageConfig;
 import com.wmyskxz.demo.config.UrlConfig;
+import com.wmyskxz.demo.module.vo.base.PageResultVo;
 import com.wmyskxz.demo.module.vo.base.ResponseVo;
 import com.wmyskxz.demo.util.ResultUtil;
 import com.wmyskxz.demo.util.UrlCheckUtil;
@@ -79,5 +82,14 @@ public class LinkController {
             return ResultUtil.error(msg);
         }
         return ResultUtil.success("绑定成功!");
+    }
+
+    @ApiOperation("查询所有Link数据")
+    @GetMapping("/apis/list")
+    @ResponseBody
+    public PageResultVo list(@RequestParam(defaultValue = PageConfig.PAGE_NUM) int pageNum,
+                             @RequestParam(defaultValue = PageConfig.PAGE_SIZE) int pageSize) {
+        Page page = new Page(pageNum, pageSize);
+        return ResultUtil.table(linkService.list(page), linkService.count());
     }
 }
