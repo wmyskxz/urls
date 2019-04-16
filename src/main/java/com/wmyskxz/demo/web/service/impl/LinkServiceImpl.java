@@ -118,6 +118,7 @@ public class LinkServiceImpl implements LinkService {
 
         TblLinkExample linkExample = new TblLinkExample();
         linkExample.or();// 无条件查询即查询所有
+        linkExample.setOrderByClause("create_time DESC");// 默认按创建时间排序.最新创建的放在前面
         PageHelper.startPage(pageNum, pageSize);// 只对下一行查询有效
         List<TblLink> linkList = linkMapper.selectByExample(linkExample);
 
