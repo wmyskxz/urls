@@ -61,7 +61,7 @@ public class LinkServiceImpl implements LinkService {
 
     @Override
     @Transactional// 开启事务
-    @Cacheable(value = "link", key = "'long_'+#shortCode")
+    @Cacheable(value = "link", key = "'short2long_'+#shortCode")
     public String get(String shortCode) {
         TblLinkExample linkExample = new TblLinkExample();
         linkExample.or().andShortUrlEqualTo(UrlConfig.BASE_SHORT_URL + shortCode);
