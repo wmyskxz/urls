@@ -66,10 +66,11 @@ public interface LinkService {
     /**
      * 返回数据库中的Link列表
      *
-     * @param page
+     * @param pageNum
+     * @param pageSize
      * @return
      */
-    List<LinkVo> list(Page page);
+    List<LinkVo> list(int pageNum, int pageSize);
 
     /**
      * 统计总数

@@ -89,7 +89,6 @@ public class LinkController {
     @ResponseBody
     public PageResultVo list(@RequestParam(defaultValue = PageConfig.PAGE_NUM) int pageNum,
                              @RequestParam(defaultValue = PageConfig.PAGE_SIZE) int pageSize) {
-        Page page = new Page(pageNum, pageSize);
-        return ResultUtil.table(linkService.list(page), linkService.count());
+        return ResultUtil.table(linkService.list(pageNum, pageSize), linkService.count());
     }
 }

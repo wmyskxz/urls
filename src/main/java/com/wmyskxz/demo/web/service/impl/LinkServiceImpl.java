@@ -33,7 +33,6 @@ public class LinkServiceImpl implements LinkService {
 
     @Override
     @Transactional// 开启事务
-    @CachePut(value = "link", key = "'count'")
     public String save(String longUrl) {
         TblLink link = findByLongUrl(longUrl);
         if (link != null) {
@@ -51,7 +50,6 @@ public class LinkServiceImpl implements LinkService {
 
     @Override
     @Transactional// 开启事务
-    @CachePut(value = "link", key = "'count'")
     public String save(String longUrl, String shortCode) {
 
         if (!isValid(UrlConfig.BASE_SHORT_URL + shortCode)) {
@@ -115,12 +113,12 @@ public class LinkServiceImpl implements LinkService {
 
     @Override
     @Transactional// 开启事务
-    public List<LinkVo> list(Page page) {
+    public List<LinkVo> list(int pageNum, int pageSize) {
         List<LinkVo> resultList = new LinkedList<>();
 
         TblLinkExample linkExample = new TblLinkExample();
         linkExample.or();// 无条件查询即查询所有
-        PageHelper.startPage(page);// 只对下一行查询有效
+        PageHelper.startPage(pageNum, pageSize);// 只对下一行查询有效
         List<TblLink> linkList = linkMapper.selectByExample(linkExample);
 
         // 拼接数据
@@ -136,7 +134,6 @@ public class LinkServiceImpl implements LinkService {
 
     @Override
     @Transactional// 开启事务
-    @Cacheable(value = "link", key = "'count'")
     public Long count() {
         TblLinkExample linkExample = new TblLinkExample();
         linkExample.or();// 无条件查询即查询所有
