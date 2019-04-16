@@ -18,6 +18,8 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
  * Redis配置类
+ * <p>
+ * 参考文章：https://blog.csdn.net/fanpeizhong/article/details/79998164
  *
  * @auth:wmyskxz
  * @date:2019/04/16 - 19:55
@@ -57,8 +59,7 @@ public class RedisConfig extends CachingConfigurerSupport {
     //缓存管理器
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
-        RedisCacheManager.RedisCacheManagerBuilder builder = RedisCacheManager
-                .RedisCacheManagerBuilder
+        RedisCacheManager.RedisCacheManagerBuilder builder = RedisCacheManager.RedisCacheManagerBuilder
                 .fromConnectionFactory(redisConnectionFactory);
         return builder.build();
     }
