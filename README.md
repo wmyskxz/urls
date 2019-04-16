@@ -35,3 +35,20 @@ A：上网查到有两种算法，一种是使用自增id来达到永不重复�
 # 三、数据库设计
 根据项目需求，表可以简单的设计成：
 
+```MySQL
+CREATE TABLE `tbl_link` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `long_url` varchar(255) NOT NULL COMMENT '长链接url',
+  `short_url` varchar(255) NOT NULL COMMENT '短链接url',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `type` varchar(10) NOT NULL DEFAULT 'system' COMMENT '标注创建者,system为系统默认创建,custom为用户自定义',
+  `visit_size` int(11) NOT NULL DEFAULT '0' COMMENT '访问量',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+
+根据以往的经验，使用MyBatis的话，可以把`create_time`的默认值设置为`CURRENT_TIMESTAMP`，把`update_time`的默认值设置为`CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`，这样就可以直接使用MyBatis逆向生成之后的带Selective的方法自动维护这两个字段的值
+
+# 四、后台搭建
+
